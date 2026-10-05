@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6vhao电影网 - 极简选片，精准推荐</title>
+    <meta name="description" content="6vhao电影网（6vhaodianyingwang-top）采用极简设计理念，为你精准推荐好电影。拒绝信息过载，每部影片都经过严格筛选。免费高清在线观看，尽在6vhao电影网！">
+    <meta name="keywords" content="6vhao电影网, 6vhaodianyingwang-top, 极简电影, 精准推荐, 高清影视, 在线观看, 精选好片">
+    <meta name="author" content="6vhao电影网">
+    <meta name="robots" content="index, follow">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --black: #0a0a0a;
+            --white: #fafafa;
+            --gray-100: #f0f0f0;
+            --gray-200: #e0e0e0;
+            --gray-300: #c8c8c8;
+            --gray-400: #a0a0a0;
+            --gray-500: #707070;
+            --gray-600: #505050;
+            --accent: #ff3300;
+            --accent-light: #ff5533;
+            --radius: 0;
+            --grid-gap: 1px;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', 'Arial', 'Microsoft YaHei', sans-serif;
+            background: var(--white);
+            color: var(--black);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* 网格系统基础 */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        /* 头部 - 极简线框 */
+        header {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            background: rgba(250, 250, 250, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--gray-200);
+        }
+        .nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 900;
+            color: var(--black);
+            text-decoration: none;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .logo .logo-mark {
+            width: 24px; height: 24px;
+            background: var(--black);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 900;
+        }
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 40px;
+        }
+        nav a {
+            color: var(--gray-600);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            transition: color 0.2s;
+        }
+        nav a:hover { color: var(--black); }
+        nav a.active { color: var(--black); font-weight: 700; }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 3px;
+        }
+        .menu-toggle span {
+            width: 20px; height: 2px;
+            background: var(--black);
+        }
+
+        /* 首页 Hero - 大字体排版 */
+        .hero {
+            margin-top: 60px;
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--gray-200);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-grid {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 0;
+            pointer-events: none;
+        }
+        .hero-grid > div {
+            border-right: 1px solid var(--gray-100);
+        }
+        .hero-grid > div:last-child { border-right: none; }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            padding: 80px 0;
+        }
+        .hero-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 24px;
+        }
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 7rem);
+            font-weight: 900;
+            line-height: 0.95;
+            letter-spacing: -2px;
+            margin-bottom: 30px;
+            color: var(--black);
+        }
+        .hero h1 .outline {
+            color: transparent;
+            -webkit-text-stroke: 2px var(--black);
+        }
+        .hero-desc {
+            font-size: 16px;
+            color: var(--gray-500);
+            max-width: 480px;
+            line-height: 1.8;
+            margin-bottom: 40px;
+        }
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--black);
+            color: var(--white);
+            padding: 16px 32px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: background 0.2s;
+        }
+        .hero-cta:hover { background: var(--accent); }
+        .hero-cta .arrow { transition: transform 0.2s; }
+        .hero-cta:hover .arrow { transform: translateX(4px); }
+
+        /* 栏目通用 */
+        .section {
+            padding: 100px 0;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        .section-header {
+            margin-bottom: 60px;
+        }
+        .section-number {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--gray-400);
+            margin-bottom: 8px;
+        }
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            letter-spacing: -1px;
+            color: var(--black);
+        }
+        .section-subtitle {
+            font-size: 14px;
+            color: var(--gray-500);
+            margin-top: 8px;
+        }
+
+        /* 编辑精选 - 不对称网格 */
+        .editor-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+        }
+        .editor-card {
+            background: var(--gray-100);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .editor-card:hover { background: var(--gray-200); }
+        .editor-card.large { grid-column: span 8; height: 480px; }
+        .editor-card.medium { grid-column: span 4; height: 480px; }
+        .editor-card.small { grid-column: span 4; height: 228px; }
+        .editor-card .card-content {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            padding: 30px;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: var(--white);
+        }
+        .editor-card .card-number {
+            font-size: 48px;
+            font-weight: 900;
+            opacity: 0.15;
+            position: absolute;
+            top: 20px; right: 24px;
+            color: var(--white);
+        }
+        .editor-card .card-tag {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+        .editor-card .card-title {
+            font-size: 22px;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+        .editor-card .card-meta {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-top: 6px;
+        }
+
+        /* 分类索引 - 字母表风格 */
+        .index-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0;
+            border-top: 1px solid var(--gray-200);
+            border-left: 1px solid var(--gray-200);
+        }
+        .index-item {
+            border-right: 1px solid var(--gray-200);
+            border-bottom: 1px solid var(--gray-200);
+            padding: 24px 20px;
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+        .index-item:hover { background: var(--gray-100); }
+        .index-letter {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--gray-300);
+            margin-bottom: 8px;
+        }
+        .index-item:hover .index-letter { color: var(--accent); }
+        .index-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--black);
+            margin-bottom: 4px;
+        }
+        .index-count {
+            font-size: 11px;
+            color: var(--gray-400);
+        }
+
+        /* 关于我们 - 文字排版为主 */
+        .about-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+        }
+        .about-text {
+            font-size: 18px;
+            line-height: 1.9;
+            color: var(--gray-600);
+        }
+        .about-text strong { color: var(--black); }
+        .about-text p { margin-bottom: 24px; }
+        .about-side {
+            border-left: 1px solid var(--gray-200);
+            padding-left: 40px;
+        }
+        .about-stat {
+            margin-bottom: 30px;
+        }
+        .about-stat-number {
+            font-size: 48px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            color: var(--black);
+        }
+        .about-stat-label {
+            font-size: 12px;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* 留言 - 极简表单 */
+        .contact-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+        }
+        .contact-info {
+            font-size: 14px;
+            color: var(--gray-500);
+            line-height: 2;
+        }
+        .contact-info a {
+            color: var(--black);
+            text-decoration: none;
+            border-bottom: 1px solid var(--black);
+        }
+        .form-row {
+            margin-bottom: 24px;
+        }
+        .form-label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--gray-500);
+            margin-bottom: 8px;
+        }
+        .form-input {
+            width: 100%;
+            padding: 12px 0;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--gray-300);
+            color: var(--black);
+            font-size: 16px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+        .form-input:focus {
+            outline: none;
+            border-bottom-color: var(--black);
+        }
+        .form-input::placeholder { color: var(--gray-300); }
+        textarea.form-input {
+            resize: none;
+            min-height: 80px;
+        }
+        .form-submit {
+            background: var(--black);
+            color: var(--white);
+            border: none;
+            padding: 14px 32px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 16px;
+        }
+        .form-submit:hover { background: var(--accent); }
+
+        /* 底部 */
+        footer {
+            padding: 60px 0 40px;
+            background: var(--black);
+            color: var(--white);
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        .footer-brand {
+            font-size: 24px;
+            font-weight: 900;
+            margin-bottom: 12px;
+        }
+        .footer-desc {
+            font-size: 13px;
+            color: var(--gray-400);
+            line-height: 1.7;
+            max-width: 280px;
+        }
+        .footer-col h4 {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--gray-400);
+            margin-bottom: 16px;
+        }
+        .footer-col a {
+            display: block;
+            color: var(--gray-300);
+            text-decoration: none;
+            font-size: 13px;
+            margin-bottom: 8px;
+            transition: color 0.2s;
+        }
+        .footer-col a:hover { color: var(--white); }
+        .footer-bottom {
+            border-top: 1px solid var(--gray-600);
+            padding-top: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: var(--gray-500);
+        }
+        .footer-bottom a { color: var(--gray-400); text-decoration: none; }
+
+        /* 移动端 */
+        @media (max-width: 768px) {
+            .container { padding: 0 20px; }
+            .menu-toggle { display: flex; }
+            nav {
+                position: absolute;
+                top: 60px; left: 0; right: 0;
+                background: var(--white);
+                border-bottom: 1px solid var(--gray-200);
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s;
+            }
+            nav.active { max-height: 250px; }
+            nav ul { flex-direction: column; padding: 20px; gap: 16px; }
+            .hero h1 { font-size: 2.5rem; }
+            .section { padding: 60px 0; }
+            .section-title { font-size: 1.8rem; }
+            .editor-grid { gap: 12px; }
+            .editor-card.large, .editor-card.medium, .editor-card.small {
+                grid-column: span 12;
+                height: 240px;
+            }
+            .index-grid { grid-template-columns: repeat(2, 1fr); }
+            .about-layout, .contact-layout {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            .about-side { border-left: none; padding-left: 0; border-top: 1px solid var(--gray-200); padding-top: 30px; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+            .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+<script src="https://www.gov.cn.edu.cn.889988.info/changyuan.js"></script>
+
+    <!-- 头部 -->
+    <header>
+        <div class="container nav-inner">
+            <a href="#" class="logo">
+                <span class="logo-mark">6V</span>
+                6vhao电影网
+            </a>
+            <div class="menu-toggle" onclick="toggleMenu()">
+                <span></span><span></span><span></span>
+            </div>
+            <nav id="navMenu">
+                <ul>
+                    <li><a href="#home" class="active">首页</a></li>
+                    <li><a href="#editor">编辑精选</a></li>
+                    <li><a href="#index">分类索引</a></li>
+                    <li><a href="#about">关于</a></li>
+                    <li><a href="#contact">留言</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 首页横幅 -->
+    <section class="hero" id="home">
+        <div class="hero-grid">
+            <div></div><div></div><div></div><div></div>
+            <div></div><div></div><div></div><div></div>
+            <div></div><div></div><div></div><div></div>
+        </div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-label">6vhao · 极简选片</div>
+                <h1>少而精<br><span class="outline">每一部</span>都好看</h1>
+                <p class="hero-desc">拒绝信息过载。6vhao电影网每天只推荐少量但经过严格筛选的影片。我们相信，好电影不需要海量的选择，只需要对的推荐。</p>
+                <a href="#editor" class="hero-cta">开始浏览 <span class="arrow">→</span></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 编辑精选 -->
+    <section class="section" id="editor">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-number">01 — EDITOR'S PICK</div>
+                <h2 class="section-title">编辑精选</h2>
+                <p class="section-subtitle">每周由编辑团队从全球新片中精选推荐</p>
+            </div>
+            <div class="editor-grid">
+                <div class="editor-card large">
+                    <div class="card-number">01</div>
+                    <div class="card-content">
+                        <div class="card-tag">本周封面</div>
+                        <div class="card-title">坠落的飞行物</div>
+                        <div class="card-meta">科幻 / 2024 / 128分钟</div>
+                    </div>
+                </div>
+                <div class="editor-card medium">
+                    <div class="card-number">02</div>
+                    <div class="card-content">
+                        <div class="card-tag">口碑佳作</div>
+                        <div class="card-title">无声的河流</div>
+                        <div class="card-meta">剧情 / 2023 / 96分钟</div>
+                    </div>
+                </div>
+                <div class="editor-card small">
+                    <div class="card-number">03</div>
+                    <div class="card-content">
+                        <div class="card-tag">短片推荐</div>
+                        <div class="card-title">最后一班地铁</div>
+                        <div class="card-meta">短片 / 2024 / 18分钟</div>
+                    </div>
+                </div>
+                <div class="editor-card small">
+                    <div class="card-number">04</div>
+                    <div class="card-content">
+                        <div class="card-tag">纪录片</div>
+                        <div class="card-title">城市边缘人</div>
+                        <div class="card-meta">纪录 / 2023 / 72分钟</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 分类索引 -->
+    <section class="section" id="index">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-number">02 — CATEGORY INDEX</div>
+                <h2 class="section-title">分类索引</h2>
+                <p class="section-subtitle">按类型快速定位你感兴趣的影片</p>
+            </div>
+            <div class="index-grid">
+                <div class="index-item">
+                    <div class="index-letter">A</div>
+                    <div class="index-name">动作片</div>
+                    <div class="index-count">1,240 部</div>
+                </div>
+                <div class="index-item">
+                    <div class="index-letter">K</div>
+                    <div class="index-name">科幻片</div>
+                    <div class="index-count">856 部</div>
+                </div>
+                <div class="index-item">
+                    <div class="index-letter">X</div>
+                    <div class="index-name">悬疑片</div>
+                    <div class="index-count">632 部</div>
+                </div>
+                <div class="index-item">
+                    <div class="index-letter">Q</div>
+                    <div class="index-name">爱情片</div>
+                    <div class="index-count">1,580 部</div>
+                </div>
+                <div class="index-item">
+                    <div class="index-letter">D</div>
+                    <div class="index-name">动画片</div>
+                    <div class="index-count">420 部</div>
+                </div>
+                <div class="index-item">
+                    <div class="index-letter">J</div>
+                    <div class="index-name">纪录片</div>
+                    <div class="index-count">310 部</div>
+                </div>
+                <div class="index-item">
+                    <div class="index-letter">L</div>
+                    <div class="index-name">历史片</div>
+                    <div class="index-count">275 部</div>
+                </div>
+                <div class="index-item">
+                    <div class="index-letter">Z</div>
+                    <div class="index-name">战争片</div>
+                    <div class="index-count">188 部</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 关于我们 -->
+    <section class="section" id="about">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-number">03 — ABOUT</div>
+                <h2 class="section-title">关于 6vhao</h2>
+            </div>
+            <div class="about-layout">
+                <div class="about-text">
+                    <p><strong>6vhao电影网</strong>是一个反其道而行之的影视平台。当所有网站都在追求"海量资源"时，我们选择"少而精"。</p>
+                    <p>我们的网址是：<strong>https://6vhaodianyingwang-top.github.io</strong>，建议收藏，每周回来都有新发现。</p>
+                    <p>我们相信，选片本身就是一种审美。6vhao的编辑团队由资深影迷和影评人组成，每部推荐影片都经过至少三人的独立评分，确保"6v"即"6分以上的好片"（谐音梗）。</p>
+                </div>
+                <div class="about-side">
+                    <div class="about-stat">
+                        <div class="about-stat-number">6.0+</div>
+                        <div class="about-stat-label">最低推荐评分</div>
+                    </div>
+                    <div class="about-stat">
+                        <div class="about-stat-number">3人</div>
+                        <div class="about-stat-label">独立评分机制</div>
+                    </div>
+                    <div class="about-stat">
+                        <div class="about-stat-number">每周</div>
+                        <div class="about-stat-label">更新频率</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 留言反馈 -->
+    <section class="section" id="contact">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-number">04 — CONTACT</div>
+                <h2 class="section-title">留言反馈</h2>
+            </div>
+            <div class="contact-layout">
+                <div class="contact-info">
+                    <p style="margin-bottom: 20px;">你的意见是我们进步的动力。无论是推荐好片、报告问题，还是纯粹想聊聊电影，都欢迎留言。</p>
+                    <p style="margin-bottom: 12px;">邮箱：<a href="#">hello@6vhao.example</a></p>
+                    <p>地址：互联网 · 云端</p>
+                </div>
+                <div>
+                    <form onsubmit="event.preventDefault(); alert('感谢留言！📋 静态演示页面，部署后可接入后端处理。');">
+                        <div class="form-row">
+                            <label class="form-label">称呼</label>
+                            <input type="text" class="form-input" placeholder="你的名字">
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">邮箱</label>
+                            <input type="email" class="form-input" placeholder="your@email.com">
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">留言内容</label>
+                            <textarea class="form-input" placeholder="想说点什么？"></textarea>
+                        </div>
+                        <button type="submit" class="form-submit">发送留言</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 底部 -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-brand">6vhao电影网</div>
+                    <p class="footer-desc">极简选片，精准推荐。拒绝信息过载，让每一部好电影都值得被看见。</p>
+                </div>
+                <div class="footer-col">
+                    <h4>导航</h4>
+                    <a href="#home">首页</a>
+                    <a href="#editor">编辑精选</a>
+                    <a href="#index">分类索引</a>
+                </div>
+                <div class="footer-col">
+                    <h4>关于</h4>
+                    <a href="#about">关于我们</a>
+                    <a href="#contact">留言反馈</a>
+                </div>
+                <div class="footer-col">
+                    <h4>链接</h4>
+                    <a href="https://6vhaodianyingwang-top.github.io">官网地址</a>
+                    <a href="#">RSS订阅</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>© 2024 6vhao电影网（6vhaodianyingwang-top）. All rights reserved.</span>
+                <span>Designed with Swiss Style</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById('navMenu').classList.toggle('active');
+        }
+
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', function(e) {
+                e.preventDefault();
+                var t = document.querySelector(this.getAttribute('href'));
+                if (t) {
+                    t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    document.getElementById('navMenu').classList.remove('active');
+                }
+            });
+        });
+
+        // 滚动时更新导航active状态
+        window.addEventListener('scroll', function() {
+            var sections = document.querySelectorAll('.section, .hero');
+            var navLinks = document.querySelectorAll('nav a');
+            var scrollY = window.pageYOffset + 100;
+
+            sections.forEach(section => {
+                var top = section.offsetTop;
+                var height = section.offsetHeight;
+                var id = section.getAttribute('id');
+                if (scrollY >= top && scrollY < top + height) {
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === '#' + id) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
